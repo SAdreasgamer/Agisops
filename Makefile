@@ -13,11 +13,11 @@ java-test:
 	cd java-services && mvn verify
 
 python-test:
-	cd python-services && pytest tests/ -v
+	cd python-services && ./venv/bin/pytest tests/ -v
 
 lint:
 	cd java-services && mvn spotbugs:check
-	cd python-services && ruff check .
+	cd python-services && ./venv/bin/ruff check .
 
 migrate:
 	cd java-services && mvn flyway:migrate -pl common

@@ -1,21 +1,24 @@
-import sys
-import os
 import asyncio
 import logging
+import os
+import sys
+
 import grpc
 
 # Add gen directory to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'gen'))
 
-from aegisops import retrieval_pb2
-from aegisops import retrieval_pb2_grpc
+from aegisops import retrieval_pb2, retrieval_pb2_grpc
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("RetrievalService")
 
 class RetrievalService(retrieval_pb2_grpc.RetrievalServiceServicer):
     async def RetrieveContext(self, request, context):
-        logger.info(f"Received RetrieveContext request: query='{request.query}', max_results={request.max_results}, tenant_id='{request.tenant_id}'")
+        logger.info(
+            f"Received RetrieveContext request: query='{request.query}', "
+            f"max_results={request.max_results}, tenant_id='{request.tenant_id}'"
+        )
         
         # Mock documents returned
         docs = [
@@ -26,7 +29,10 @@ class RetrievalService(retrieval_pb2_grpc.RetrievalServiceServicer):
             ),
             retrieval_pb2.Document(
                 doc_id="doc-002",
-                content="AEGISOPS standard operating procedure for Database CPU spikes: verify connection pool size and query execution plans.",
+                content=(
+                    "AEGISOPS standard operating procedure for Database CPU spikes: "
+                    "verify connection pool size and query execution plans."
+                ),
                 score=0.88
             )
         ]

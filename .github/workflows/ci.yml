@@ -1,0 +1,90 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Start Infrastructure (Docker Compose)
+        run: |
+          docker compose up -d
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v3
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Wait for PostgreSQL and Kafka
+        run: |
+          echo "Waiting for services to be healthy..."
+          # Wait up to 60 seconds
+          for i in {1..30}; do
+            POSTGRES_STATUS=$(docker inspect --format='{{json .State.Health.Status}}' aegisops-postgres 2>/dev/null || echo '"unhealthy"')
+            KAFKA_STATUS=$(docker inspect --format='{{json .State.Health.Status}}' aegisops-kafka 2>/dev/null || echo '"unhealthy"')
+            if [ "$POSTGRES_STATUS" = '"healthy"' ] && [ "$KAFKA_STATUS" = '"healthy"' ]; then
+              echo "Infrastructure services are healthy!"
+              break
+            fi
+            echo "Still waiting... (Postgres: $POSTGRES_STATUS, Kafka: $KAFKA_STATUS)"
+            sleep 2
+          done
+          docker ps
+
+      - name: Run Flyway Database Migrations
+        run: |
+          cd java-services
+          mvn flyway:migrate -pl common
+
+      - name: Build and Test Java Services
+        run: |
+          cd java-services
+          mvn clean verify
+
+      - name: Run Java Lint (SpotBugs)
+        run: |
+          cd java-services
+          mvn spotbugs:check
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Python Dependencies
+        run: |
+          cd python-services
+          python -m venv venv
+          ./venv/bin/pip install --upgrade pip
+          ./venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Compile Python Protobufs
+        run: |
+          cd python-services
+          chmod +x compile_protos.sh
+          ./compile_protos.sh
+
+      - name: Run Python Lint (Ruff)
+        run: |
+          cd python-services
+          ./venv/bin/ruff check .
+
+      - name: Run Python Tests (Pytest)
+        run: |
+          cd python-services
+          ./venv/bin/pytest tests/ -v
+
+      - name: Teardown Infrastructure
+        if: always()
+        run: |
+          docker compose down

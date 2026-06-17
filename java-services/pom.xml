@@ -28,7 +28,7 @@
         <spring-grpc.version>1.0.3</spring-grpc.version>
         <lombok.version>1.18.46</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <spotbugs.version>4.8.6.0</spotbugs.version>
+        <spotbugs.version>4.9.8.3</spotbugs.version>
     </properties>
 
     <modules>
@@ -126,6 +126,9 @@
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>${spotbugs.version}</version>
+                    <configuration>
+                        <excludeFilterFile>${session.executionRootDirectory}/spotbugs-exclude.xml</excludeFilterFile>
+                    </configuration>
                     <executions>
                         <execution>
                             <goals>

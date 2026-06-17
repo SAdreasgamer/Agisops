@@ -1,6 +1,7 @@
 import asyncio
-import logging
 import json
+import logging
+
 from aiokafka import AIOKafkaConsumer
 
 logging.basicConfig(level=logging.INFO)
@@ -22,8 +23,15 @@ async def consume():
         async for msg in consumer:
             try:
                 payload = json.loads(msg.value.decode('utf-8'))
-                logger.info(f"Consumed event from Kafka: Topic={msg.topic}, Partition={msg.partition}, Offset={msg.offset}")
-                logger.info(f"Parsed Event ID: {payload.get('eventId')}, Event Type: {payload.get('eventType')}, Source: {payload.get('source')}")
+                logger.info(
+                    f"Consumed event from Kafka: Topic={msg.topic}, "
+                    f"Partition={msg.partition}, Offset={msg.offset}"
+                )
+                logger.info(
+                    f"Parsed Event ID: {payload.get('eventId')}, "
+                    f"Event Type: {payload.get('eventType')}, "
+                    f"Source: {payload.get('source')}"
+                )
                 logger.info(f"Full Payload: {payload}")
             except Exception as e:
                 logger.error(f"Error parsing message value: {msg.value}. Error: {e}")
