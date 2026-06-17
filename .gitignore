@@ -1,0 +1,41 @@
+# Secrets
+.env
+.env.local
+
+# Java Maven Exclusions
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/
+.metadata/
+dependency-reduced-pom.xml
+
+# Python Exclusions
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# IDE and Editors
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.DS_Store
+
+# Local/Log directories
+logs/
+*.log
+docker-compose.override.yml

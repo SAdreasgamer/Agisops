@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegisops-python-services"
+version = "0.1.0"
+description = "AEGISOPS Python Services including LangGraph Agents and Retrieval RAG pipeline"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn>=0.30.0",
+    "grpcio>=1.64.0",
+    "grpcio-tools>=1.64.0",
+    "protobuf>=5.27.0",
+    "aiokafka>=0.11.0",
+    "asyncpg>=0.29.0",
+    "redis>=5.0.0",
+    "langgraph>=1.2.5",
+    "langchain>=0.2.0",
+    "langchain-openai>=0.1.0",
+    "sentence-transformers>=5.0.0",
+    "pydantic>=2.7.0"
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"

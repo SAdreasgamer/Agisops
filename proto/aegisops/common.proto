@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package aegisops.common;
+
+option java_multiple_files = true;
+option java_package = "com.aegisops.proto.common";
+
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  SEVERITY_INFO = 1;
+  SEVERITY_WARNING = 2;
+  SEVERITY_ERROR = 3;
+  SEVERITY_CRITICAL = 4;
+}
+
+message Status {
+  int32 code = 1;
+  string message = 2;
+}

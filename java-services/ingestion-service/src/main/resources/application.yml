@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ingestion-service
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+
+aegisops:
+  webhook:
+    github:
+      secret: ${GITHUB_WEBHOOK_SECRET:mock-github-secret-key-12345}
+    pagerduty:
+      secret: ${PAGERDUTY_WEBHOOK_SECRET:mock-pd-secret-key-12345}
+    alertmanager:
+      secret: ${ALERTMANAGER_WEBHOOK_SECRET:mock-am-secret-key-12345}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces
