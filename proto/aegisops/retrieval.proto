@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package aegisops.retrieval;
+
+option java_multiple_files = true;
+option java_package = "com.aegisops.proto.retrieval";
+
+message QueryRequest {
+  string query = 1;
+  int32 max_results = 2;
+  string tenant_id = 3;
+}
+
+message Document {
+  string doc_id = 1;
+  string content = 2;
+  float score = 3;
+}
+
+message QueryResponse {
+  repeated Document documents = 1;
+}
+
+service RetrievalService {
+  rpc RetrieveContext (QueryRequest) returns (QueryResponse);
+}

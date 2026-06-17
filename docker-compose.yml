@@ -64,7 +64,7 @@ services:
       - "7233:7233"
       - "8233:8233"
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=5432
       - POSTGRES_USER=aegisops
       - POSTGRES_PWD=aegisops_password

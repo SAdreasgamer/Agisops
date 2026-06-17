@@ -4,42 +4,12 @@ server:
 spring:
   application:
     name: workflow-orchestrator
-  datasource:
-    url: jdbc:postgresql://localhost:5432/aegisops
-    username: aegisops
-    password: aegisops_password
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: aegisops-orchestrator
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all
-      properties:
-        enable.idempotence: true
-
-temporal:
-  service-address: localhost:7233
-  namespace: default
-
-grpc:
-  client:
-    retrieval-service:
-      address: static://localhost:50051
-      negotiation-type: plaintext
+  grpc:
+    client:
+      channels:
+        retrieval:
+          address: "static://localhost:50051"
+          negotiation-type: PLAINTEXT
 
 management:
   endpoints:
